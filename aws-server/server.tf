@@ -5,8 +5,17 @@ provider "aws" {
   region     = "${var.region}"
 }
 
+variable "amis" {
+  type = "map"
+  default = {
+    "us-east-1" = "ami-b374d5a5"
+    "us-west-2" = "ami-4b32be2b"
+  }
+}
+
+
 resource "aws_instance" "server" {
-    ami = "ami-2757f631"
+    ami = "${lookup(var.amis, var.region)}"
     instance_type = "t2.micro"
 
     provisioner "local-exec" {
