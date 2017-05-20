@@ -7,10 +7,6 @@ provider "aws" {
 
 variable "amis" {
   type = "map"
-  default = {
-    "us-east-1" = "ami-b374d5a5"
-    "us-west-2" = "ami-4b32be2b"
-  }
 }
 
 
@@ -26,3 +22,8 @@ resource "aws_instance" "server" {
 resource "aws_eip" "ip" {
   instance = "${aws_instance.server.id}"
 }
+
+output "ami" {
+  value = "${lookup(var.amis, var.region)}"
+}
+
