@@ -13,6 +13,9 @@ variable "amis" {
 resource "aws_instance" "server" {
     ami = "${lookup(var.amis, var.region)}"
     instance_type = "t2.micro"
+    tags {
+      Name = "terraform-example"
+    }
 
     provisioner "local-exec" {
     command = "echo ${aws_instance.server.public_ip} > ip_address.txt"
