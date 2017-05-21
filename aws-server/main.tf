@@ -13,17 +13,25 @@ variable "amis" {
 resource "aws_instance" "server" {
     ami = "${lookup(var.amis, var.region)}"
     instance_type = "t2.micro"
+    user_data = "${file("userdata.sh")}"
+    vpc_security_group_ids = ["${aws_security_group.instance.id}"]
+    key_name = "${var.key_name}"
     tags {
       Name = "terraform-example"
     }
-    user_data = "${file("userdata.sh")}"
-  }
-  vpc_security_group_ids = ["${aws_security_group.instance.id}"]
 }
 
 resource "aws_security_group" "instance" {
   name = "terraform-server-instance"
+    # SSH access from anywhere
+    ingress {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
 
+  #Allow web traffic
   ingress {
     from_port = 8080
     to_port = 8080
