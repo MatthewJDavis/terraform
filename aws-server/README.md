@@ -11,6 +11,6 @@ run `terraform apply -var-file="ami.tfvars" -var 'access_key' = {your_access_key
 
 You could also create a secrets file (Do Not check this into source control) secrets.tfsecvars to store your access key, secret key and key name and run the command like:
 
-run `terraform apply -var-file="ami.tfvars" -var-file="secrets.tfsecvars" 
+run `terraform apply -var-file="ami.tfvars" -var-file="secrets.tfsecvars"`
 
-Let is create for a few minutes then in the terminal enter: curl http://{public_ip}:8080
+Let it create for a few minutes then in the terminal enter: curl http://{public_ip}:8080
