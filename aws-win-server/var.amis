@@ -1,0 +1,4 @@
+amis = {
+  "us-east-1" = "ami-f1b5cfe7"
+  "us-west-2" = "ami-799bbc1c"
+}
