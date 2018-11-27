@@ -9,3 +9,7 @@ variable resource_group_name {
 variable location {
   default = "uksouth" 
  }
+
+ variable computer_name {}
+ variable user_name {}
+ variable password {}
