@@ -1,6 +1,6 @@
 # Compiled files
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
 
 # Varibale files not for sc
 *.tfsecvars
