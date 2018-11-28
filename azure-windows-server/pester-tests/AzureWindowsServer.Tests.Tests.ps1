@@ -2,7 +2,7 @@ $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 . "$here\$sut"
 
-$ResourceGroupName = 'myResourceGroup'
+$ResourceGroupName = 'poshbot'
 $Location = 'uksouth'
 $VMName = 'poshbot'
 $requiredSize = 'Standard_A1_V2'
