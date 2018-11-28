@@ -9,6 +9,13 @@ variable resource_group_name {
 variable location {
   default = "uksouth" 
  }
+variable tagValue {
+  default = "Poshbot Server"
+}
+
+variable subnetId {
+  
+}
 
  variable computer_name {}
  variable user_name {}
