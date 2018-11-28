@@ -11,24 +11,24 @@ resource "azurerm_resource_group" "myterraformgroup" {
     location = "${var.location}"
 
     tags {
-        environment = "Terraform Demo"
+        environment = "${var.tagValue}"
     }
 }
 
 resource "azurerm_public_ip" "myterraformpublicip" {
-  name                         = "myPublicIP"
-  location                     = "uksouth"
+  name                         = "${var.computer_name}-public-ip"
+  location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.myterraformgroup.name}"
   public_ip_address_allocation = "dynamic"
 
   tags {
-    environment = "Terraform Demo"
+        environment = "${var.tagValue}"    
   }
 }
 
 # Create Network Security Group and rule
 resource "azurerm_network_security_group" "myterraformnsg" {
-  name                = "myNetworkSecurityGroup"
+  name                = "${var.computer_name}-nsg"
   location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.myterraformgroup.name}"
 
@@ -45,34 +45,35 @@ resource "azurerm_network_security_group" "myterraformnsg" {
   }
 
   tags {
-    environment = "Terraform Demo"
+        environment = "${var.tagValue}"    
   }
 }
 
 resource "azurerm_network_interface" "myterraformnic" {
-  name                      = "myNIC"
-  location                  = "uksouth"
+  name                      = "${var.computer_name}-nic"
+  location                  = "${var.location}"
   resource_group_name       = "${azurerm_resource_group.myterraformgroup.name}"
   network_security_group_id = "${azurerm_network_security_group.myterraformnsg.id}"
 
   ip_configuration {
-    name                          = "myNicConfiguration"
-    subnet_id                     = "/subscriptions/68591ca0-00a5-40e9-a039-6b57919f1c99/resourceGroups/teamcity-rg/providers/Microsoft.Network/virtualNetworks/teamcity-rg-vnet/subnets/default"
+    name                          = "${var.computer_name}-nic-config"
+    subnet_id                     = "${var.subnetId}"
     private_ip_address_allocation = "dynamic"
     public_ip_address_id          = "${azurerm_public_ip.myterraformpublicip.id}"
   }
 
   tags {
-    environment = "Terraform Demo"
+        environment = "${var.tagValue}"    
   }
 }
 
 resource "azurerm_virtual_machine" "poshbot-server" {
-  name                  = "server"
+  name                  = "${var.computer_name}"
   location              = "${var.location}"
   resource_group_name   = "${azurerm_resource_group.myterraformgroup.name}"
   network_interface_ids = ["${azurerm_network_interface.myterraformnic.id}"]
   vm_size               = "Standard_A1_v2"
+  delete_os_disk_on_termination = true
 
   storage_image_reference {
     publisher = "MicrosoftWindowsServer"
