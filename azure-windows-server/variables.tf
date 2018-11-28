@@ -17,6 +17,8 @@ variable subnetId {
   
 }
 
- variable computer_name {}
+ variable computer_name {
+   default = "poshbot"
+ }
  variable user_name {}
  variable password {}
