@@ -4,7 +4,7 @@ variable client_id {}
 variable client_secret {}
 
 variable resource_group_name {
-  default = "myResourceGroup"
+  default = "poshbot"
 }
 variable location {
   default = "uksouth" 
