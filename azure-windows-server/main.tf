@@ -44,6 +44,18 @@ resource "azurerm_network_security_group" "myterraformnsg" {
     destination_address_prefix = "*"
   }
 
+    security_rule {
+    name                       = "WinRM"
+    priority                   = 1011
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "5986"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
   tags {
         environment = "${var.tagValue}"    
   }
@@ -93,6 +105,7 @@ resource "azurerm_virtual_machine" "poshbot-server" {
     computer_name      = "${var.computer_name}"
     admin_username     = "${var.user_name}"
     admin_password     = "${var.password}"
+    custom_data = ".\ansibleRemoting.ps1"
   }
 
   os_profile_windows_config {
