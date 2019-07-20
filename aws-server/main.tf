@@ -16,7 +16,7 @@ resource "aws_instance" "server" {
     user_data = "${file("userdata.sh")}"
     vpc_security_group_ids = ["${aws_security_group.instance.id}"]
     key_name = "${var.key_name}"
-    tags {
+    tags = {
       Name = "terraform-example"
     }
 }
