@@ -1,0 +1,18 @@
+---
+- hosts: "{{ target_server }}"
+  become: yes
+  tasks:
+    - name: stop splunkd service
+      systemd:
+        state: stopped
+        name: splunkd
+    - name : copy upgrade files
+      copy:
+        src: "{{ item }}"
+        dest: /etc/apt/apt.conf.d/
+        owner: root
+        group: root
+        mode: '0644'
+      with_items: 
+        - files/50unattended-upgrades
+        - files/20auto-upgrades
