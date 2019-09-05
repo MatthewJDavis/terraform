@@ -47,3 +47,4 @@ New-AzStorageContainer -Name $ContainerName -Permission Off -Context $ctx
 
 New-AzStorageAccountSASToken -Service Blob -Permission rwdl -Context $ctx -Protocol HttpsOnly -ResourceType Service, Container, Object
 
+# export ARM_SAS_TOKEN=''
