@@ -45,6 +45,8 @@ $ctx = New-AzStorageContext -StorageAccountName $StorageAccountName -StorageAcco
 New-AzStorageContainer -Name $ContainerName -Permission Off -Context $ctx
 #endregion container
 
-New-AzStorageAccountSASToken -Service Blob -Permission rwdl -Context $ctx -Protocol HttpsOnly -ResourceType Service, Container, Object
+$SASToken = New-AzStorageAccountSASToken -Service Blob -Permission rwdl -Context $ctx -Protocol HttpsOnly -ResourceType Service, Container, Object -ExpiryTime (get-date).AddDays(1)
 
-# export ARM_SAS_TOKEN=''
+# if using bash, zsh export ARM_SAS_TOKEN=''
+
+New-Item -Path env: -Name ARM_SAS_TOKEN -Value $SASToken
