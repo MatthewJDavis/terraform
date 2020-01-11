@@ -8,7 +8,7 @@ resource "azurerm_resource_group" "main" {
   }
 }
 
-resource "azurerm_public_ip" "myterraformpublicip" {
+resource "azurerm_public_ip" "main" {
   name                = "${var.computer_name}-public-ip"
   location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.main.name}"
@@ -64,7 +64,7 @@ resource "azurerm_network_interface" "myterraformnic" {
     name                          = "${var.computer_name}-nic-config"
     subnet_id                     = "${azurerm_subnet.internal.id}"
     private_ip_address_allocation = "dynamic"
-    public_ip_address_id          = "${azurerm_public_ip.myterraformpublicip.id}"
+    public_ip_address_id          = "${azurerm_public_ip.main.id}"
   }
 
   tags = {
