@@ -1,24 +1,21 @@
-variable subscription_id {}
-variable tenant_id {}
-variable client_id {}
-variable client_secret {}
-
+variable "prefix" {
+  description = "The prefix to be applied to resources"
+  default = "demowin"
+}
 variable resource_group_name {
-  default = "poshbot"
+  default = "tfwindows"
 }
 variable location {
-  default = "uksouth" 
+  default = "northeurope" 
  }
 variable tagValue {
-  default = "Poshbot Server"
+  default = "terraform windows demo"
 }
-
-variable subnetId {
-  
-}
-
  variable computer_name {
-   default = "poshbot"
+   default = "tfwindows"
  }
- variable user_name {}
- variable password {}
+ variable user_name {
+   default = "matt"
+ }
+ variable password {
+ }
