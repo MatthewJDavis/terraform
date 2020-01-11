@@ -86,18 +86,18 @@ resource "azurerm_subnet" "internal" {
   address_prefix       = "10.0.2.0/24"
 }
 
-resource "azurerm_virtual_machine" "myterraformvm" {
+resource "azurerm_virtual_machine" "main" {
   name                          = "${var.computer_name}"
   location                      = "${var.location}"
   resource_group_name           = "${azurerm_resource_group.main.name}"
   network_interface_ids         = ["${azurerm_network_interface.myterraformnic.id}"]
-  vm_size                       = "Standard_A1_v2"
+  vm_size                       = "Standard_A2_v2"
   delete_os_disk_on_termination = true
 
   storage_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
-    sku       = "2016-Datacenter-Server-Core-smalldisk"
+    sku       = "2016-Datacenter"
     version   = "latest"
   }
 
@@ -117,4 +117,9 @@ resource "azurerm_virtual_machine" "myterraformvm" {
   os_profile_windows_config {
   }
 
+}
+
+data "azurerm_public_ip" "main" {
+  name                = "${azurerm_public_ip.main.name}"
+  resource_group_name = "${azurerm_virtual_machine.main.resource_group_name}"
 }
