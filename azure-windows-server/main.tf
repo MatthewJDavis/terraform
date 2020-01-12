@@ -113,11 +113,33 @@ resource "azurerm_virtual_machine" "main" {
     admin_username = "${var.user_name}"
     admin_password = "${var.password}"
   }
-
   os_profile_windows_config {
+    provision_vm_agent = true
   }
 
 }
+
+resource "azurerm_virtual_machine_extension" "main" {
+  name                 = "init"
+  location             = "${azurerm_resource_group.main.location}"
+  resource_group_name  = "${azurerm_resource_group.main.name}"
+  virtual_machine_name = "${azurerm_virtual_machine.main.name}"
+  publisher            = "Microsoft.Compute"
+  type                 = "CustomScriptExtension"
+  type_handler_version = "1.9"
+
+  # CustomVMExtension Documetnation: https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-windows
+
+  settings = <<SETTINGS
+    {
+        "fileUris": [
+            "https://raw.githubusercontent.com/MatthewJDavis/terraform/master/azure-windows-server/init.ps1"
+        ],
+        "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File init.ps1"
+    }
+  SETTINGS
+}
+
 
 data "azurerm_public_ip" "main" {
   name                = "${azurerm_public_ip.main.name}"
