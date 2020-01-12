@@ -62,15 +62,15 @@ $store.Close()
 
 
 # create local user
-[Reflection.Assembly]::LoadWithPartialName(“System.Web”)
+Add-Type -AssemblyName System.Web
 $username = "ansible"
 $generatedPassword = [System.Web.Security.Membership]::GeneratePassword(20, 0)
 
-$password = ConvertTo-SecureString -String $generatedPassword -AsPlainText -Force
+$password = ConvertTo-SecureString -String "$generatedPassword" -AsPlainText -Force
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username, $password
 
 
-New-LocalUser -Name 'ansible' -AccountNeverExpires -Description 'ansible user' -PasswordNeverExpires -Password $credential.Password
+New-LocalUser -Name $username -AccountNeverExpires -Description 'ansible user' -PasswordNeverExpires -Password $credential.Password
 Add-LocalGroupMember -Group Administrators -Member 'ansible'
 
 
