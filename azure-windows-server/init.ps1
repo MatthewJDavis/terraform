@@ -4,7 +4,40 @@ New-Item C:\temp -ItemType Directory
 $uri = 'https://raw.githubusercontent.com/MatthewJDavis/terraform/master/azure-windows-server/cert.pem'
 Invoke-WebRequest -Uri $uri -OutFile $certPath
 
-# import the cert
+#region Set up WinRM Https listener with self signed cert
+
+$SubjectName = $env:ComputerName
+$CertValiditDays = 1095
+$CertStoreLocation = 'Cert:\LocalMachine\My'
+
+$cert = New-SelfSignedCertificate -DnsName $env:ComputerName -CertStoreLocation $CertStoreLocation 
+
+
+# Create the hashtables of settings to be used.
+$valueset = @{
+  Hostname              = $SubjectName
+  CertificateThumbprint = $cert.Thumbprint
+}
+
+$selectorset = @{
+  Transport = "HTTPS"
+  Address   = "*"
+}
+
+Write-Verbose "Enabling SSL listener."
+New-WSManInstance -ResourceURI 'winrm/config/Listener' -SelectorSet $selectorset -ValueSet $valueset
+
+netsh advfirewall firewall add rule name="WinRM-HTTPS-test" dir=in localport=5986 protocol=TCP action=allow
+
+
+$fwRuleName = 'winRM-HTTPS'
+New-NetFirewallRule -Name $fwRuleName -DisplayName $fwRuleName -Direction Inbound -LocalPort 5986 -Protocol TCP -Action Allow -Enabled True -Profile Any
+
+#endregion
+
+
+
+# import the user cert
 
 $cert = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2
 $cert.Import("$certPath")
@@ -27,7 +60,6 @@ $store.Open("MaxAllowed")
 $store.Add($cert)
 $store.Close()
 
-Set-Item -Path WSMan:\localhost\Service\Auth\Certificate -Value $true
 
 # create local user
 
@@ -53,3 +85,5 @@ New-Item -Path WSMan:\localhost\ClientCertificate `
   -Issuer $thumbprint `
   -Credential $credential `
   -Force
+
+  Set-Item -Path WSMan:\localhost\Service\Auth\Certificate -Value $true
