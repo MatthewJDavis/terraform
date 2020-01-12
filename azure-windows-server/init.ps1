@@ -62,9 +62,11 @@ $store.Close()
 
 
 # create local user
-
+[Reflection.Assembly]::LoadWithPartialName(“System.Web”)
 $username = "ansible"
-$password = ConvertTo-SecureString -String "aRed738£jieYYh2toBeTakenFromVaultinFuture" -AsPlainText -Force
+$generatedPassword = [System.Web.Security.Membership]::GeneratePassword(20, 0)
+
+$password = ConvertTo-SecureString -String $generatedPassword -AsPlainText -Force
 $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username, $password
 
 
