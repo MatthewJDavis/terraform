@@ -7,3 +7,6 @@
 
 # Module directory
 .terraform/
+
+*.log
+*.lock.hcl
